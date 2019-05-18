@@ -1,0 +1,19 @@
+{
+  "name": "website-integration",
+  "version": "1.0.0",
+  "description": "FTF Website Integration",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FoxtrotCore/ftf-website-integration.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FoxtrotCore/ftf-website-integration/issues"
+  },
+  "homepage": "https://github.com/FoxtrotCore/ftf-website-integration#readme"
+}
