@@ -10,8 +10,8 @@
     "type": "git",
     "url": "git+https://github.com/FoxtrotCore/ftf-website-integration.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "The Foxtrot Fanatics",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/FoxtrotCore/ftf-website-integration/issues"
   },
