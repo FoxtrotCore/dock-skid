@@ -1,0 +1,11 @@
+
+body { color: #AAA; }
+
+h1{
+  font-family: monospace;
+  font-size: 3em;
+}
+
+a { text-decoration: none; color: inherit; }
+
+ul { text-decoration: none; }

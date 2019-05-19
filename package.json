@@ -12,6 +12,9 @@
   },
   "author": "The Foxtrot Fanatics",
   "license": "MIT",
+  "dependencies": {
+    "@angular/cli": "*"
+  },
   "bugs": {
     "url": "https://github.com/FoxtrotCore/ftf-website-integration/issues"
   },
