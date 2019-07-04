@@ -1,7 +1,13 @@
+language: node_js
+node_js:
+  - "6"
 
 notifications:
   webhooks:
-    - https://discordapp.com/api/webhooks/596162577105682444/R4ZA_u7gIQtYFMSX3-moqoGdBiFVJuHVP4M4foQDUPyrNlPjeghT8GR03ZTC4tX5_aFz
+    - $DISCORD_WEBHOOK
 
-run:
-  - exit 0
+before_script:
+  - echo "Nothign to do here, move along now."
+
+script:
+  - npm test
