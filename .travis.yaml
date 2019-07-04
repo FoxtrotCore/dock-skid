@@ -1,13 +1,18 @@
+os: linux
+dist: trusty
 language: node_js
 node_js:
-  - "6"
+  - "7"
 
 notifications:
   webhooks:
     - $DISCORD_WEBHOOK
 
+matris:
+  fast_finish: true
+
 before_script:
-  - echo "Nothign to do here, move along now."
+  - npm install
 
 script:
   - npm test
