@@ -1,2 +1,7 @@
 
-exit 0
+notifications:
+  webhooks:
+    - https://discordapp.com/api/webhooks/596162577105682444/R4ZA_u7gIQtYFMSX3-moqoGdBiFVJuHVP4M4foQDUPyrNlPjeghT8GR03ZTC4tX5_aFz
+
+run:
+  - exit 0
