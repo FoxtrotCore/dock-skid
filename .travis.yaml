@@ -1,6 +1,6 @@
 os: linux
 dist: trusty
-language: node_js
+language: generic
 node_js:
   - "7"
 
