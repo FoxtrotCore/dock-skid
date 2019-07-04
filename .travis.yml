@@ -1,18 +1,24 @@
+# Build stuff
 os: linux
 dist: trusty
 language: node_js
 node_js:
   - 11
 
+# Config stuff
+git:
+  quiet: true
+
 notifications:
-  webhooks:
-    - $DISCORD_WEBHOOK
+  webhooks: $DISCORD_WEBHOOK
+    on_success: change
+    on_failure: always
+    on_start:   change
+    on_cancel:  always
+    on_error:   always
 
-matris:
-  fast_finish: true
-
-before_script:
-  - npm install
+# Run tests
+fast_finish: true
 
 script:
   - npm test
