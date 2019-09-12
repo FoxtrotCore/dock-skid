@@ -1,23 +1,26 @@
 {
-  "name": "website-integration",
+  "name": "dock-skid-demo",
   "version": "1.0.0",
-  "description": "FTF Website Integration",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/FoxtrotCore/ftf-website-integration.git"
-  },
-  "author": "The Foxtrot Fanatics",
-  "license": "MIT",
   "dependencies": {
-    "@angular/cli": "*",
-    "@google-cloud/storage": "^2.5.0"
+    "@angular/http": "^7.2.15",
+    "angular2-jwt": "^0.2.3",
+    "bcryptjs": "*",
+    "body-parser": "*",
+    "cors": "*",
+    "express": "*",
+    "jsonwebtoken": "*",
+    "mongoose": "*",
+    "passport": "*",
+    "passport-jwt": "*",
+    "rxjs": "^6.5.3",
+    "rxjs-compat": "^6.5.3"
   },
-  "bugs": {
-    "url": "https://github.com/FoxtrotCore/ftf-website-integration/issues"
-  },
-  "homepage": "https://github.com/FoxtrotCore/ftf-website-integration#readme"
+  "author": "Foxtrot Fanatics",
+  "license": "MIT"
 }
