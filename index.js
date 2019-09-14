@@ -7,10 +7,22 @@ const mongoose = require('mongoose');
 const config = require('./config/database');
 
 //
+// Runtime stuff
+//
+const port = process.env.PORT || 8080;
+const db_password = process.env.DOCKSKID_DB_PASSWORD;
+const db_path = config.database.replace('<password>', db_password);;
+
+if(process.env.DOCKSKID_DB_PASSWORD == undefined){
+  console.log("The environment variable: DOCKSKID_DB_PASSWORD was not set! Please set it then restart the app.");
+  process.exit(0);
+}
+
+//
 // MongoDB stuff
 //
 mongoose.Promise = global.Promise;
-mongoose.connect(config.database, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(db_path, { useNewUrlParser: true, useUnifiedTopology: true });
 
 mongoose.connection.on('connected', function(){
   console.log('Found the database: ' + config.database);
@@ -19,11 +31,6 @@ mongoose.connection.on('connected', function(){
 mongoose.connection.on('error', function(e){
   console.log('There was a problem connecting to the database: ' + e);
 });
-
-//
-// Runtime stuff
-//
-const port = process.env.PORT || 8080;
 
 //
 // App + CORS stuff
