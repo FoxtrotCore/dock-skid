@@ -338,7 +338,7 @@ if (content.locals) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/ivo/cs/dock-skid-demo/dock-skid/src/styles.css */"./src/styles.css");
+module.exports = __webpack_require__(/*! /home/ivo/cs/ftf/dock-skid/dock-skid/src/styles.css */"./src/styles.css");
 
 
 /***/ })
