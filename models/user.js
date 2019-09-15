@@ -25,9 +25,14 @@ const user_schema = mongoose.Schema({
     required: true
   },
 
+  privilege: {
+    type: Number,
+    required: true
+  },
+
   is_admin: {
     type: Boolean,
-    required: false
+    required: true
   }
 });
 
