@@ -17,8 +17,21 @@ router.post('/register', function(req, res, next){
     password: req.body.password,
   });
 
+  // Check if the username is already in use
+  User.getUserByUsername(new_user.username, function(e, username){
+    if(e){ res.json({success: false, msg: 'Failed to register user: ' + e}); return; }
+    else if(username){ res.json({success: false, msg: 'Username is already in use.'}); return; }
+  });
+
+  // Check if the email is already in use
+  User.getUserByEmail(new_user.email, function(e, email){
+    if(e){ res.json({success: false, msg: 'Failed to register user: ' + e}); return; }
+    else if(email){ res.json({success: false, msg: 'Email is already in use.'}); return; }
+  });
+
+  // Add the user
   User.addUser(new_user, function(e, user){
-    if(e){ res.json({success: false, msg: 'Failed to register user.'}); }
+    if(e){ res.json({success: false, msg: 'Failed to register user: ' + e}); }
     else{ res.json({success: true, msg: 'User successfully registered.'}); }
   });
 });

@@ -30,7 +30,7 @@ const db_path = config.database.replace('<password>', config.secret);
 console.log('Attempting to connect to: ' + db_path);
 
 mongoose.Promise = global.Promise;
-mongoose.connect(db_path, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(db_path, { socketTimeoutMS: 5000, keepAlive: true, reconnectTries: 3, useNewUrlParser: true, useUnifiedTopology: true });
 
 mongoose.connection.on('connected', function(){
   console.log('Succesfully connected to the database!');
