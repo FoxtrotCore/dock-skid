@@ -7,29 +7,38 @@ const mongoose = require('mongoose');
 const config = require('./config/database');
 
 //
+// Environment variable checking
+//
+if(config.database == undefined || config.database == ""){
+  console.log("The environment variable: DOCKSKID_DB_PATH was not set! Please set it then restart the app.");
+  process.exit(1);
+}
+else if(config.secret == undefined || config.secret == ""){
+  console.log("The environment variable: DOCKSKID_DB_PASSWORD was not set! Please set it then restart the app.");
+  process.exit(1);
+}
+
+//
 // Runtime stuff
 //
 const port = process.env.PORT || 8080;
-const db_password = process.env.DOCKSKID_DB_PASSWORD;
-const db_path = config.database.replace('<password>', db_password);;
-
-if(process.env.DOCKSKID_DB_PASSWORD == undefined){
-  console.log("The environment variable: DOCKSKID_DB_PASSWORD was not set! Please set it then restart the app.");
-  process.exit(0);
-}
+const db_path = config.database.replace('<password>', config.secret);
 
 //
 // MongoDB stuff
 //
+console.log('Attempting to connect to: ' + db_path);
+
 mongoose.Promise = global.Promise;
 mongoose.connect(db_path, { useNewUrlParser: true, useUnifiedTopology: true });
 
 mongoose.connection.on('connected', function(){
-  console.log('Found the database: ' + config.database);
+  console.log('Succesfully connected to the database!');
 })
 
 mongoose.connection.on('error', function(e){
-  console.log('There was a problem connecting to the database: ' + e);
+  console.log('There was a problem connecting to the database:\n\t' + e);
+  process.exit(1)
 });
 
 //
