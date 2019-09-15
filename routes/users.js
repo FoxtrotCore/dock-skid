@@ -6,9 +6,29 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const config = require('../config/database')
 
+function censor(censor) {
+  var i = 0;
+
+  return function(key, value) {
+    if(i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value)
+      return '[Circular]';
+
+    if(i >= 29) // seems to be a harded maximum of 30 serialized objects?
+      return '[Unknown]';
+
+    ++i; // so we know we aren't using the original object anymore
+
+    return value;
+  }
+}
+
+function str(data){
+  return JSON.stringify(data, censor(data));
+}
+
 // Register
-router.post('/register', function(req, res, next){
-  var bad_request = false;
+router.post('/register', async function(req, res, next){
+  res.fast_fail = false;
   let new_user = new User({
     name: req.body.name,
     email: req.body.email,
@@ -18,34 +38,20 @@ router.post('/register', function(req, res, next){
     is_admin: false
   });
 
-  // Check if the username is already in use
-  User.getUserByUsername(new_user.username, function(e, username){
-    if(e){ res.status(400).json({success: false, msg: 'Failed to register user: ' + e}); bad_request = true; res.end(); }
-    else if(username){ res.status(406).json({success: false, msg: 'Username is already in use.'}); bad_request = true; res.end(); }
-  });
-
-  if(bad_request){
-    console.log("A bad request was made regarding the username!");
-    return;
-  }
-
-  // Check if the email is already in use
-  User.getUserByEmail(new_user.email, function(e, email){
-    if(e){ res.status(400).json({success: false, msg: 'Failed to register user: ' + e}); bad_request = true; res.end(); }
-    else if(email){ res.status(406).json({success: false, msg: 'Email is already in use.'}); bad_request = true; res.end(); }
-  });
-
-  if(bad_request){
-    console.log("A bad request was made regarding the email!");
-    return;
-  }
-
-  console.log("Creating new user with data:\n\tName: " + req.body.name + "\n\tE-Mail: " + req.body.email + "\n\tUsername: " + req.body.username);
-
-  // Add the user
-  User.addUser(new_user, function(e, user){
-    if(e){ res.status(400).json({success: false, msg: 'Failed to register user: ' + e}); return; }
-    else{ res.status(200).json({success: true, msg: 'User successfully registered.'}); return; }
+  User.hasUsername(new_user.username, function(has_user){
+    if(has_user){ return res.json({success: false, msg: 'Username is already in use!'}); } // Username is NOT unique
+    else{ // Username is unique
+      User.hasEmail(new_user.email, function(has_email){
+        if(has_email){ return res.json({success: false, msg: 'Email is already in use!'}); } // Email is NOT unique
+        else{ // Email is unique
+          User.addUser(new_user, function(e, user){
+            console.log("Attempting to create new user with data:\n\tName: " + req.body.name + "\n\tE-Mail: " + req.body.email + "\n\tUsername: " + req.body.username);
+            if(e){  return res.json({success: false, msg: 'Failed to register user: ' + e}); }
+            else{   return res.json({success: true, msg: 'User successfully registered.'}); }
+          });
+        }
+      });
+    }
   });
 });
 
