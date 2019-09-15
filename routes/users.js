@@ -20,8 +20,8 @@ router.post('/register', function(req, res, next){
 
   // Check if the username is already in use
   User.getUserByUsername(new_user.username, function(e, username){
-    if(e){ res.status(400).json({success: false, msg: 'Failed to register user: ' + e}); bad_request = true; }
-    else if(username){ res.status(406).json({success: false, msg: 'Username is already in use.'}); bad_request = true; }
+    if(e){ res.status(400).json({success: false, msg: 'Failed to register user: ' + e}); bad_request = true; return; }
+    else if(username){ res.status(406).json({success: false, msg: 'Username is already in use.'}); bad_request = true; return; }
   });
 
   if(bad_request){
@@ -31,8 +31,8 @@ router.post('/register', function(req, res, next){
 
   // Check if the email is already in use
   User.getUserByEmail(new_user.email, function(e, email){
-    if(e){ res.status(400).json({success: false, msg: 'Failed to register user: ' + e}); bad_request = true; }
-    else if(email){ res.status(406).json({success: false, msg: 'Email is already in use.'}); bad_request = true; }
+    if(e){ res.status(400).json({success: false, msg: 'Failed to register user: ' + e}); bad_request = true; return; }
+    else if(email){ res.status(406).json({success: false, msg: 'Email is already in use.'}); bad_request = true; return; }
   });
 
   if(bad_request){
