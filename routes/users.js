@@ -23,12 +23,14 @@ router.post('/register', function(req, res, next){
   User.getUserByUsername(new_user.username, function(e, username){
     if(e){ res.json({success: false, msg: 'Failed to register user: ' + e}); }
     else if(username){ res.json({success: false, msg: 'Username is already in use.'}); }
+    if(e || username) return;
   });
 
   // Check if the email is already in use
   User.getUserByEmail(new_user.email, function(e, email){
     if(e){ res.json({success: false, msg: 'Failed to register user: ' + e}); }
     else if(email){ res.json({success: false, msg: 'Email is already in use.'}); }
+    if(e || email) return;
   });
 
   // Add the user
