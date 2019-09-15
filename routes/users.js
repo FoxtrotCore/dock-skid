@@ -8,6 +8,7 @@ const config = require('../config/database')
 
 // Register
 router.post('/register', function(req, res, next){
+  var bad_request = false;
   let new_user = new User({
     name: req.body.name,
     email: req.body.email,
@@ -19,15 +20,25 @@ router.post('/register', function(req, res, next){
 
   // Check if the username is already in use
   User.getUserByUsername(new_user.username, function(e, username){
-    if(e){ res.status(400).json({success: false, msg: 'Failed to register user: ' + e}); return; }
-    else if(username){ res.status(406).json({success: false, msg: 'Username is already in use.'}); return; }
+    if(e){ res.status(400).json({success: false, msg: 'Failed to register user: ' + e}); bad_request = true; }
+    else if(username){ res.status(406).json({success: false, msg: 'Username is already in use.'}); bad_request = true; }
   });
+
+  if(bad_request){
+    console.log("A bad request was made regarding the username!");
+    return;
+  }
 
   // Check if the email is already in use
   User.getUserByEmail(new_user.email, function(e, email){
-    if(e){ res.status(400).json({success: false, msg: 'Failed to register user: ' + e}); return; }
-    else if(email){ res.status(406).json({success: false, msg: 'Email is already in use.'}); return; }
+    if(e){ res.status(400).json({success: false, msg: 'Failed to register user: ' + e}); bad_request = true; }
+    else if(email){ res.status(406).json({success: false, msg: 'Email is already in use.'}); bad_request = true; }
   });
+
+  if(bad_request){
+    console.log("A bad request was made regarding the email!");
+    return;
+  }
 
   console.log("Creating new user with data:\n\tName: " + req.body.name + "\n\tE-Mail: " + req.body.email + "\n\tUsername: " + req.body.username);
 
