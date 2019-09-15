@@ -8,7 +8,6 @@ const config = require('../config/database')
 
 // Register
 router.post('/register', function(req, res, next){
-  var bad_status = false;
   let new_user = new User({
     name: req.body.name,
     email: req.body.email,
@@ -20,28 +19,24 @@ router.post('/register', function(req, res, next){
 
   // Check if the username is already in use
   User.getUserByUsername(new_user.username, function(e, username){
-    if(e){ res.json({success: false, msg: 'Failed to register user: ' + e}); }
-    else if(username){ res.json({success: false, msg: 'Username is already in use.'}); }
-    if(e || username) bad_status = true;
+    if(e){ res.status(400).json({success: false, msg: 'Failed to register user: ' + e}); }
+    else if(username){ res.status(406).json({success: false, msg: 'Username is already in use.'}); }
+    return;
   });
-
-  if(bad_status) return;
 
   // Check if the email is already in use
   User.getUserByEmail(new_user.email, function(e, email){
-    if(e){ res.json({success: false, msg: 'Failed to register user: ' + e}); }
-    else if(email){ res.json({success: false, msg: 'Email is already in use.'}); }
-    if(e || email) bad_status = true;
+    if(e){ res.status(400).json({success: false, msg: 'Failed to register user: ' + e}); }
+    else if(email){ res.status(406).json({success: false, msg: 'Email is already in use.'}); }
+    return;
   });
-
-  if(bad_status) return;
 
   console.log("Creating new user with data:\n\tName: " + req.body.name + "\n\tE-Mail: " + req.body.email + "\n\tUsername: " + req.body.username);
 
   // Add the user
   User.addUser(new_user, function(e, user){
-    if(e){ res.json({success: false, msg: 'Failed to register user: ' + e}); }
-    else{ res.json({success: true, msg: 'User successfully registered.'}); }
+    if(e){ res.status(400).json({success: false, msg: 'Failed to register user: ' + e}); }
+    else{ res.status(200).json({success: true, msg: 'User successfully registered.'}); }
   });
 });
 
