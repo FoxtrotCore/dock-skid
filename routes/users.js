@@ -15,6 +15,8 @@ router.post('/register', function(req, res, next){
     email: req.body.email,
     username: req.body.username,
     password: req.body.password,
+    privilege: 0,
+    is_admin: false
   });
 
   // Check if the username is already in use
