@@ -5,31 +5,41 @@ const cors = require('cors');
 const passport = require('passport');
 const mongoose = require('mongoose');
 const config = require('./config/database');
+const logger = require('./utils/logger');
+
+//
+// Environment variable checking
+//
+if(config.database == undefined || config.database == ""){
+  logger.log(2, "The environment variable: DOCKSKID_DB_PATH was not set! Please set it then restart the app.");
+  process.exit(1);
+}
+else if(config.secret == undefined || config.secret == ""){
+  logger.log(2, "The environment variable: DOCKSKID_DB_PASSWORD was not set! Please set it then restart the app.");
+  process.exit(1);
+}
 
 //
 // Runtime stuff
 //
 const port = process.env.PORT || 8080;
-const db_password = process.env.DOCKSKID_DB_PASSWORD;
-const db_path = config.database.replace('<password>', db_password);;
-
-if(process.env.DOCKSKID_DB_PASSWORD == undefined){
-  console.log("The environment variable: DOCKSKID_DB_PASSWORD was not set! Please set it then restart the app.");
-  process.exit(0);
-}
+const db_path = config.database.replace('<password>', config.secret);
 
 //
 // MongoDB stuff
 //
+logger.log(0, 'Attempting to connect to: ' + db_path);
+
 mongoose.Promise = global.Promise;
-mongoose.connect(db_path, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(db_path, { socketTimeoutMS: 5000, keepAlive: true, reconnectTries: 3, useNewUrlParser: true, useUnifiedTopology: true });
 
 mongoose.connection.on('connected', function(){
-  console.log('Found the database: ' + config.database);
+  logger.log(4, 'Succesfully connected to the database!');
 })
 
 mongoose.connection.on('error', function(e){
-  console.log('There was a problem connecting to the database: ' + e);
+  logger.log(2, 'There was a problem connecting to the database:\n\t' + e);
+  process.exit(1)
 });
 
 //
@@ -53,7 +63,6 @@ require('./config/passport')(passport);
 // User routing
 //
 app.use('/u', users);
-app.use('/user', users);
 
 //
 // Start the app
@@ -67,5 +76,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(port, function(){
-  console.log("Server started on port: " + port);
+  logger.log(4, "Server started on port: " + port, write_out=false);
 });
