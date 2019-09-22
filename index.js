@@ -5,16 +5,17 @@ const cors = require('cors');
 const passport = require('passport');
 const mongoose = require('mongoose');
 const config = require('./config/database');
+const logger = require('./utils/logger');
 
 //
 // Environment variable checking
 //
 if(config.database == undefined || config.database == ""){
-  console.log("The environment variable: DOCKSKID_DB_PATH was not set! Please set it then restart the app.");
+  logger.log(2, "The environment variable: DOCKSKID_DB_PATH was not set! Please set it then restart the app.");
   process.exit(1);
 }
 else if(config.secret == undefined || config.secret == ""){
-  console.log("The environment variable: DOCKSKID_DB_PASSWORD was not set! Please set it then restart the app.");
+  logger.log(2, "The environment variable: DOCKSKID_DB_PASSWORD was not set! Please set it then restart the app.");
   process.exit(1);
 }
 
@@ -27,17 +28,17 @@ const db_path = config.database.replace('<password>', config.secret);
 //
 // MongoDB stuff
 //
-console.log('Attempting to connect to: ' + db_path);
+logger.log(0, 'Attempting to connect to: ' + db_path);
 
 mongoose.Promise = global.Promise;
 mongoose.connect(db_path, { socketTimeoutMS: 5000, keepAlive: true, reconnectTries: 3, useNewUrlParser: true, useUnifiedTopology: true });
 
 mongoose.connection.on('connected', function(){
-  console.log('Succesfully connected to the database!');
+  logger.log(4, 'Succesfully connected to the database!');
 })
 
 mongoose.connection.on('error', function(e){
-  console.log('There was a problem connecting to the database:\n\t' + e);
+  logger.log(2, 'There was a problem connecting to the database:\n\t' + e);
   process.exit(1)
 });
 
@@ -75,5 +76,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(port, function(){
-  console.log("Server started on port: " + port);
+  logger.log(4, "Server started on port: " + port, write_out=false);
 });

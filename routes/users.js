@@ -7,26 +7,6 @@ const User = require('../models/user');
 const config = require('../config/database');
 const logger = require('../utils/logger');
 
-function censor(censor) {
-  var i = 0;
-
-  return function(key, value) {
-    if(i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value)
-      return '[Circular]';
-
-    if(i >= 29) // seems to be a harded maximum of 30 serialized objects?
-      return '[Unknown]';
-
-    ++i; // so we know we aren't using the original object anymore
-
-    return value;
-  }
-}
-
-function str(data){
-  return JSON.stringify(data, censor(data));
-}
-
 // Register
 router.post('/register', async function(req, res, next){
   res.fast_fail = false;
@@ -56,7 +36,7 @@ router.post('/register', async function(req, res, next){
               logger.log(2, "Failed to register user: " + new_user.username + "\n\tDatabase error: " + e);
               return res.json({success: false, msg: 'Failed to register user: ' + e}); }
             else{
-              logger.log(0, "User succesfully registered:\n\tName: " + new_user.name
+              logger.log(4, "User succesfully registered:\n\tName: " + new_user.name
                                                       + "\n\tUsername: " + new_user.username
                                                       + "\n\tEmail: " + new_user.email
                                                       + "\n\tPrivilege: " + new_user.privilege
@@ -73,8 +53,9 @@ router.post('/register', async function(req, res, next){
 router.post('/auth', function(req, res, next){
   const username = req.body.username;
   const password = req.body.password;
+  const client_ip = req.socket.localAddress;
 
-  logger.log(0, "Authenticating user: " + username);
+  logger.log(0, "Authenticating...\n\tRequested Username: " + username + "\n\tRequestor IP: " + client_ip);
 
   User.getUserByUsername(username, function(e, user){
     if(e){ throw e; }
@@ -86,7 +67,7 @@ router.post('/auth', function(req, res, next){
       if(is_match){
         const token = jwt.sign(user.toJSON(), config.secret, { expiresIn: 86400 });
 
-        logger.log(0, "User: " + username + " succesfully logged in");
+        logger.log(4, "Succesful user login!\n\tRequested Username: " + username + "\n\tRequestor IP: " + client_ip)
 
         res.json({
           success: true,
@@ -101,7 +82,7 @@ router.post('/auth', function(req, res, next){
         });
       }
       else{ // Password was incorrect
-        logger.log(1, "Password for user: " + username + " was incorrect!");
+        logger.log(1, "Invalid login attempt!\n\tRequested Username: " + username + "\n\tRequestor IP: " + client_ip);
         return res.json({success: false, msg: 'Username or password was incorrect!'}); }
     });
   });
@@ -109,6 +90,7 @@ router.post('/auth', function(req, res, next){
 
 // Profile
 router.get('/profile', passport.authenticate('jwt', {session: false}), function(req, res){
+  logger.log(0, "Retrieving profile for user: " + req.user.username);
   res.json({user: req.user});
 });
 
