@@ -4,7 +4,8 @@ const router = express.Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const config = require('../config/database')
+const config = require('../config/database');
+const logger = require('../utils/logger');
 
 function censor(censor) {
   var i = 0;
@@ -38,16 +39,29 @@ router.post('/register', async function(req, res, next){
     is_admin: false
   });
 
+  logger.log(0, "Attempting to register user: " + new_user.username);
+
   User.hasUsername(new_user.username, function(has_user){
-    if(has_user){ return res.json({success: false, msg: 'Username is already in use!'}); } // Username is NOT unique
+    if(has_user){ // Username is NOT unique
+      logger.log(1, "User: " + new_user.name + " tried to register with username: " + new_user.username + " that's already in use");
+      return res.json({success: false, msg: 'Username is already in use!'}); }
     else{ // Username is unique
       User.hasEmail(new_user.email, function(has_email){
-        if(has_email){ return res.json({success: false, msg: 'Email is already in use!'}); } // Email is NOT unique
+        if(has_email){ // Email is NOT unique
+          logger.log(1, "User: " + new_user.name + " tried to register with email: " + new_user.email + " that's already in use");;
+          return res.json({success: false, msg: 'Email is already in use!'}); }
         else{ // Email is unique
           User.addUser(new_user, function(e, user){
-            console.log("Attempting to create new user with data:\n\tName: " + req.body.name + "\n\tE-Mail: " + req.body.email + "\n\tUsername: " + req.body.username);
-            if(e){  return res.json({success: false, msg: 'Failed to register user: ' + e}); }
-            else{   return res.json({success: true, msg: 'User successfully registered.'}); }
+            if(e){
+              logger.log(2, "Failed to register user: " + new_user.username + "\n\tDatabase error: " + e);
+              return res.json({success: false, msg: 'Failed to register user: ' + e}); }
+            else{
+              logger.log(0, "User succesfully registered:\n\tName: " + new_user.name
+                                                      + "\n\tUsername: " + new_user.username
+                                                      + "\n\tEmail: " + new_user.email
+                                                      + "\n\tPrivilege: " + new_user.privilege
+                                                      + "\n\tIs Admin: " + new_user.is_admin);
+              return res.json({success: true, msg: 'User successfully registered.'}); }
           });
         }
       });
@@ -60,13 +74,19 @@ router.post('/auth', function(req, res, next){
   const username = req.body.username;
   const password = req.body.password;
 
+  logger.log(0, "Authenticating user: " + username);
+
   User.getUserByUsername(username, function(e, user){
     if(e){ throw e; }
-    if(!user){ return res.json({success: false, msg: 'Username or password was incorrect!'}); }
+    if(!user){ // Username was incorrect
+      logger.log(1, "Username: " + username + " was incorrect!");
+      return res.json({success: false, msg: 'Username or password was incorrect!'}); }
     User.comparePassword(password, user.password, function(e, is_match){
-      if(e){ throw e; }
+      if(e){ logger.log(2, e); throw e; }
       if(is_match){
         const token = jwt.sign(user.toJSON(), config.secret, { expiresIn: 86400 });
+
+        logger.log(0, "User: " + username + " succesfully logged in");
 
         res.json({
           success: true,
@@ -80,7 +100,9 @@ router.post('/auth', function(req, res, next){
           }
         });
       }
-      else{ return res.json({success: false, msg: 'Username or password was incorrect!'}); }
+      else{ // Password was incorrect
+        logger.log(1, "Password for user: " + username + " was incorrect!");
+        return res.json({success: false, msg: 'Username or password was incorrect!'}); }
     });
   });
 });

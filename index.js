@@ -62,7 +62,6 @@ require('./config/passport')(passport);
 // User routing
 //
 app.use('/u', users);
-app.use('/user', users);
 
 //
 // Start the app
