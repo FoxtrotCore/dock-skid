@@ -1087,6 +1087,7 @@ __webpack_require__.r(__webpack_exports__);
 let AuthService = class AuthService {
     constructor(http) {
         this.http = http;
+        console.log("Logged in: " + this.is_logged_in());
     }
     register(user) {
         var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]();
@@ -1109,8 +1110,8 @@ let AuthService = class AuthService {
             return false;
     }
     is_logged_in() {
-        const token = localStorage.getItem('id_token');
-        return !(token == null || token == undefined);
+        this.auth_token = localStorage.getItem('id_token');
+        return !(this.auth_token == null || this.auth_token == undefined);
     }
     get_profile() {
         this.load_token();
@@ -1118,7 +1119,7 @@ let AuthService = class AuthService {
             'Content-Type': 'application/json',
             'Authorization': this.auth_token
         });
-        return this.http.get('http://localhost:3000/u/profile', { headers: headers });
+        return this.http.get('u/profile', { headers: headers });
     }
     load_token() {
         this.auth_token = localStorage.getItem('id_token');
@@ -1264,7 +1265,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_2__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/ivo/cs/dock-skid-demo/dock-skid/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /home/ivo/cs/ftf/dock-skid/dock-skid/src/main.ts */"./src/main.ts");
 
 
 /***/ })
