@@ -1,5 +1,5 @@
 module.exports = {
-  log_path: '/var/log/dock-skid',
+  log_path: './logs',
 
   logs: {
     access: '/dock-skid.access.log',
