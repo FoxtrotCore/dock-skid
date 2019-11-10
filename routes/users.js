@@ -94,4 +94,10 @@ router.get('/profile', passport.authenticate('jwt', {session: false}), function(
   res.json({user: req.user});
 });
 
+// Video
+router.get('/video', passport.authenticate('jwt', {session: false}), function(req, res){
+  logger.log(0, "Retrieving profile for user: " + req.user.username);
+  res.json({user: req.user});
+});
+
 module.exports = router;
