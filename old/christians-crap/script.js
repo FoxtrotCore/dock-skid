@@ -1,5 +1,5 @@
 
-window.onload = function() {
+window.onload = function(){
   var video = document.getElementById("video");
   if (Hls.isSupported()) {
     console.log("HLS.js is Supported");
@@ -10,12 +10,14 @@ window.onload = function() {
     var videoTest = 'video/mp4; codecs="' + videoCodec + '"';
     var audioConfirmation = MediaSource.isTypeSupported(audioTest);
     var videoConfirmation = MediaSource.isTypeSupported(videoTest);
+    
     if(!audioConfirmation) {
       console.error("Expected Audio Codec Not Supported: " + audioTest);
     }
     if(!videoConfirmation) {
       console.error("Expected Video Codec Not Supported: " + videoTest);
     }
+
     if(audioConfirmation && videoConfirmation)
     {
       console.log("Audio & Video Codecs should be Supported");
