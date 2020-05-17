@@ -10,7 +10,6 @@
   "files": [
     "src/test.ts",
     "src/polyfills.ts",
-    "src/**/hls.ts",
   ],
   "include": [
     "src/**/*.spec.ts",

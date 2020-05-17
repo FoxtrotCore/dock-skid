@@ -16,7 +16,7 @@ import { VideoPlayerComponent } from './components//video-player/video-player.co
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
