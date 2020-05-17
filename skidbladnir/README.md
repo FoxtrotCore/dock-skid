@@ -2,7 +2,9 @@
 
 The front-end web application
 
-## [![Build Status](https://travis-ci.org/FoxtrotCore/dock-skid.svg?branch=master)](https://travis-ci.org/FoxtrotCore/dock-skid)
+### Build Statuses
+* Master: [![Build Status](https://travis-ci.org/FoxtrotCore/dock-skid.svg?branch=master)](https://travis-ci.org/FoxtrotCore/dock-skid)
+* Dmitri Dev: [![Build Status](https://travis-ci.org/FoxtrotCore/dock-skid.svg?branch=dmitri-dev)](https://travis-ci.org/FoxtrotCore/dock-skid)
 
 ## Build
 
