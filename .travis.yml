@@ -10,7 +10,9 @@ cache:
      - ./node_modules
 
 install:
+  - cd skidbladnir
   - npm install
+  - cd ..
 
 jobs:
   include:
