@@ -10,7 +10,7 @@ window.onload = function(){
     var videoTest = 'video/mp4; codecs="' + videoCodec + '"';
     var audioConfirmation = MediaSource.isTypeSupported(audioTest);
     var videoConfirmation = MediaSource.isTypeSupported(videoTest);
-    
+
     if(!audioConfirmation) {
       console.error("Expected Audio Codec Not Supported: " + audioTest);
     }

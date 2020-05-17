@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@angular/http": "^7.2.15",
+    "hls": "*",
     "angular2-jwt": "^0.2.3",
     "bcryptjs": "*",
     "body-parser": "*",
