@@ -15,4 +15,5 @@ install:
 jobs:
   include:
     - script:
+        - cd skidbladnir
         - npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
