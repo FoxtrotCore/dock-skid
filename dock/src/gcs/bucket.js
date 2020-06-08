@@ -20,6 +20,7 @@ module.exports = {
     const [buckets] = await storage.getBuckets();
     return buckets.length != 0;
   },
+
   /**
    * getBuckets - Gets a list of all available bucket names.
    *
@@ -33,6 +34,7 @@ module.exports = {
     });
     return bucket_names;
   },
+
   /**
    * getFilesInDir - Gets all file metadata in a directory.<br>
    * Metadata keys:<br>

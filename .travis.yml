@@ -13,7 +13,7 @@ install:
   - cd dock
   - npm install
   - cd ..
-  - cd skidbladnir
+  - cd skid
   - npm install
   - cd ..
 
@@ -23,6 +23,6 @@ jobs:
         - cd dock
         - npm test
         - cd ..
-        - cd skidbladnir
+        - cd skid
         - npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
         - cd ..
